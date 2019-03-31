@@ -1,43 +1,32 @@
 <template>
   <div class="container">
+    <Myhead/>
     <Banner/>
-    <CompanyProfile ref="screen_1" :screenState="screenState_1" />
-    <News/>
-    <ServiceIndustry ref="screen_2" :screenState="screenState_2"/>
-    <ServiceDescription/>
-    <Partner/>
+    <div class="summary-wrap">
+      <div class="pointer">现在我们在这里</div>
+      <div class="title"><span>现在释放你的想象</span></div>
+      <div class="summary">创意是品牌和产品之间的纽带，我们希望通过我们的设计打开品牌大门，增加你的品牌价值，推广你的公司，这是我们实现这一点的巨大乐趣</div>
+    </div>
+    <Service/>
     <Myfoot/>
-
-    <div class="gototop" @click="goTop" v-show="goTopState"></div>
   </div>
 </template>
 
 <script>
+  import Myhead from '~/components/Myhead.vue'
   import Myfoot from '~/components/Myfoot.vue'
-  import CompanyProfile from '~/components/index/CompanyProfile.vue'
-  import News from '~/components/index/News.vue'
-  import ServiceIndustry from '~/components/index/ServiceIndustry.vue'
-  import ServiceDescription from '~/components/index/ServiceDescription.vue'
-  import Partner from '~/components/index/Partner.vue'
+  import Service from '~/components/index/Service.vue'
   import Banner from '~/components/index/Banner.vue'
-  import throttle from '~/utils/throttle'
 
   export default {
     components: {
+      Myhead,
       Myfoot,
-      CompanyProfile,
-      News,
-      ServiceIndustry,
-      ServiceDescription,
-      Partner,
+      Service,
       Banner,
     },
     data () {
       return {
-        goTopState: false,
-        screenState_1: false,
-        screenState_2: false,
-        screenWidth: 0,
         isMobile: false,
         mobileWidth: 992
       }
@@ -55,13 +44,9 @@
       }
     },
     created() {
-      // 滚动函数节流
-      this.throttleScrollHandler = throttle.call(this, this.scrollHandler, 50)
+
     },
     mounted() {
-      // 绑定scroll监听函数
-      window.addEventListener('scroll', this.throttleScrollHandler)
-
       //获取宽度 根据宽度判断设备
       this.screenWidth = document.body.clientWidth
       this.checkDevice(this.screenWidth)
@@ -73,38 +58,9 @@
       }
     },
     destroyed() {
-      // 解除scroll监听函数
-      window.removeEventListener('scroll', this.throttleScrollHandler)
+
     },
     methods: {
-      goTop(){ //回到顶部
-        window.scrollTo(0,0)
-      },
-      scrollHandler() {
-        if(this.isMobile) return
-        const clientHeight = document.documentElement.clientHeight || document.body.clientHeight
-        const scrollY =
-          window.pageYOffset ||
-          document.documentElement.scrollTop ||
-          document.body.scrollTop
-        const refs = this.$refs
-
-        for (let i = 1; i < 3; i++) {
-          const key = `screen_${i}`
-          const top = refs[key].getOffsetTop() - scrollY - 300
-          // 设置header样式
-          if (top <= 0 && top > -clientHeight) {
-            this['screenState_' + i] = true
-          }
-        }
-
-        //回到首屏按钮
-        if(scrollY > clientHeight){
-          this.goTopState = true
-        }else{
-          this.goTopState = false
-        }
-      },
       checkDevice(sw) {
         //如果小于mobileWidth就判定使用手机端布局
         if(sw < this.mobileWidth){
@@ -119,25 +75,66 @@
 
 <style lang="stylus" rel="stylesheet/stylus">
 
-.container
-  min-width: 1200px
-  width: 100%
-  background: #FBFBFC
-  position: relative
-  .gototop
-    width: 60px
-    height: 60px
-    background: url(../assets/index/arrow-up.png) top center no-repeat
-    background-size: 100% 100%
-    position: fixed
-    right: 100px
-    bottom: 100px
-    cursor: pointer;
+@media (min-width: 993px) 
+  .container
+    min-width 1200px
+    width 100%
+    background-color #ffffff
+    position relative
+    .summary-wrap
+      width: 1200px
+      margin: 0 auto 150px
+      height: auto
+      overflow: hidden
+      .pointer
+        font-size 18px
+        font-family: NotoSansHansMedium
+        padding 50px 0 100px
+      .title
+        font-size 30px
+        font-family SourceHanSerifCNBold
+        font-weight bold
+        height 60px
+        padding-left 50px
+        background: url('~assets/design/t-icon.png') left center no-repeat
+        background-size: 30px 30px
+        span 
+          display inline-block
+          line-height 60px
+          border-bottom 1px solid #dda60e
+      .summary
+        font-size 28px
+        font-family NotoSansHansMedium
+        padding-left 50px
+        padding-top 35px
 
 @media (max-width: 992px) 
   .container
-    min-width: 0
-    width: 100%
-    .gototop
-      display: none
+    width 100%
+    .summary-wrap
+      width 100%
+      margin-bottom 1rem
+      padding 0 0.25rem
+      .pointer
+        font-size .28rem
+        font-family: NotoSansHansMedium
+        padding 0.3rem 0 2rem
+      .title
+        font-size 0.42rem
+        font-family SourceHanSerifCNBold
+        font-weight bold
+        height 0.6rem
+        padding-left 0.7rem
+        background: url('~assets/design/t-icon.png') left center no-repeat
+        background-size: 0.5rem 0.5rem
+        span 
+          display inline-block
+          line-height 0.6rem
+          border-bottom 1px solid #dda60e
+      .summary
+        font-size 0.28rem
+        line-height 0.42rem
+        font-family NotoSansHansMedium
+        padding-left 0.7rem
+        padding-top 0.7rem
 </style>
